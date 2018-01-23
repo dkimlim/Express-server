@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- <title>TinyApp</title> -->
+  <% include ./partials/_header %>
+</head>
+
+<body>
+
+<% for (var key in urls) { %>
+	
+    <ul>
+    	<li> <%= key + " : " + urls[key] + " ==> "%> <a href ="https://localhost:8080/<%= key %>">Here is your shortened link.</a></li>
+    	
+    </ul>
+<% } %>
+
+<!-- <a href = "https://localhost:8080/deadlink">Shorten a new link!</a> -->
+
+</body>
+
+</html>
