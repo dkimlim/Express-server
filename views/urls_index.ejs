@@ -10,12 +10,11 @@
 <% for (var key in urls) { %>
 	
     <ul>
-    	<li> <%= key + " : " + urls[key] + " ==> "%> <a href ="https://localhost:8080/<%= key %>">Here is your shortened link.</a></li>
+    	<li> <%= key + " : " + urls[key] + " ==> "%> <a href ="localhost:8080/"<%= key %>"> Here is your shortened link.</a></li>
     	
     </ul>
 <% } %>
 
-<!-- <a href = "https://localhost:8080/deadlink">Shorten a new link!</a> -->
 
 </body>
 

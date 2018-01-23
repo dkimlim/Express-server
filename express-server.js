@@ -11,14 +11,6 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-// app.get("/hello", (req, res) => {
-// 	res.end(`<html>
-// 				<body>
-// 					Hello <b>World</b>
-// 				</body>
-// 			</html>\n`);
-// });
-
 app.get("/", (req, res) => {
   res.end("Hello! This is the Example.");
 });
@@ -34,28 +26,37 @@ app.get("/urls", (req, res) => {
 	res.render("urls_index", templateVars);
 });
 
-app.get("/urls/:id", (req, res) => {
-	let templateVars = { 
-		shortURL: req.params.id,
-		urlDatabase: urlDatabase 
-	};
-	res.render("urls_show", templateVars);
+app.post("/urls", (req, res) => {	
+	var shorty = generateRandomString();
+	urlDatabase[shorty] = req.body.longURL;
+	res.redirect(`http://localhost:8080/urls/${shorty}`);
 });
 
 app.get("/urls/new", (req, res) => {
     res.render("urls_new");
 });
 
-app.get("/u/:shortURL", (req, res) => {
-  // let longURL = ...
-  res.redirect(longURL);
+
+app.get("/urls/:id", (req, res) => {
+	let templateVars = { 
+		shortURL: req.params.id,
+		longURL: urlDatabase[req.params.id] 
+	};
+	res.render("urls_show", templateVars);
 });
 
-app.post("/urls", (req, res) => {	
-	console.log(req.body);
-	urlDatabase += generateRandomString();
-	res.send("Ok");
+app.get("/u/:shortURL", (req, res) => {
+    //if the requested URL doesnt exist
+    if(!urlDatabase[req.url]) {
+        console.log('That is not a valid url!');
+        res.send('Invalid URL. Please double check the URL.');
+    } else {
+        let longURL = urlDatabase[req.url];
+        res.redirect(longURL);
+    }
 });
+
+
 
 
 app.listen(PORT, () => {
