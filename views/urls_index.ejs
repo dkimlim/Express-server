@@ -14,7 +14,7 @@
 	<% for (var key in urls) { %>
 		
 	    <ul>
-	    	<li> <a href ="localhost:8080/<%= key %>">http://localhost:8080/<%= key %></a> <%= " (" + urls[key] + ") "%> 
+	    	<li> <a href ="localhost:8080/urls/<%= key %>"> http://localhost:8080/<%= key %></a> <%= " (" + urls[key] + ") "%> 
 
 	    		<form method="POST" action="/urls/<%= key %>/delete"><input type="submit" value="Don't press!"></form></li>	    	
 	    </ul>
