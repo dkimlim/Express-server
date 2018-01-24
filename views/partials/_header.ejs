@@ -2,15 +2,26 @@
 <html lang="en">
 
 	<body style="font-size:20px; padding:50px;">
-<h1><center>TinyApp</center></h1>
+		
+		<h1><center>TinyApp</center></h1>
 
-<form action="/login" method="POST">
-      <label for="username">Sign in:</label>
-      <input id="username" type="text" name="username" style="width: 170px">
-      <input type="submit" value="Submit">
+		<% if(username){ %>
+		   <h3><%= username %></h3> 
+		  <form method="POST" action="<%= username %>/logout">
+		   	<input type="submit" value="Logout">
+		  </form>
+
+		<% } else { %>
+
+		   <form action="/login" method="POST">
+		      <label for="username">Sign in:</label>
+		      <input id="username" type="text" name="username" style="width: 170px">
+		      <input type="submit" value="Submit">
+		   </form>
+ 		<% } %>
+
+
 	</body>
-<%= username%>
-
 </html>
 
 
