@@ -6,13 +6,16 @@
 	<% include ./partials/_header %>
 </head>
 
-<body>
+<body style="font-size:20px; padding:50px;">
 
     <ul>
-    	<li> <%= shortURL %> </li>
-    	<li> <%= longURL %> </li>
+    	<li> <%= shortURL %> for <%= longURL %></li>
     </ul>
-
-    <a href="http://localhost:8080/urls/new">Shorten another URL!</a>
+     <form method="POST">
+      <label for="longURL">Edit your URL:</label>
+      <input id="shortURL" type="text" name="longURL" placeholder= "<%= longURL %>"" style="width: 300px">
+      <input type="submit" value="Update">
+    </form>
+    
 </body>
 </html>
