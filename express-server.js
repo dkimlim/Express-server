@@ -46,18 +46,10 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-    //if the requested URL doesnt exist
-    if(!urlDatabase[req.url]) {
-        console.log('That is not a valid url!');
-        res.send('Invalid URL. Please double check the URL.');
-    } else {
-        let longURL = urlDatabase[req.url];
+	let shorty = req.params.shortURL;
+    let longURL = urlDatabase[shorty];
         res.redirect(longURL);
-    }
 });
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
