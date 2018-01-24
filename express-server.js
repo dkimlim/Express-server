@@ -14,6 +14,19 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = { 
+  "userRandomID": {
+    	id: "userRandomID", 
+    	email: "user@example.com", 
+    	password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    	id: "user2RandomID", 
+    	email: "user2@example.com", 
+    	password: "dishwasher-funk"
+  }
+}
+
 app.get("/", (req, res) => {
   res.end("Hello! This is the Example.");
 });
@@ -30,6 +43,7 @@ app.get("/urls", (req, res) => {
 	};
 	res.render("urls_index", templateVars);
 });
+
 
 app.post("/urls", (req, res) => {	
 	var shorty = generateRandomString();
@@ -58,25 +72,24 @@ app.get("/urls/:id", (req, res) => {
 app.post("/urls/:id", (req, res) => {
 		let shortURL = req.params.id
 		urlDatabase[shortURL] = req.body.longURL;
-
-	res.redirect("http://localhost:8080/urls");
+	res.redirect("/urls");
 })
 
 app.post("/urls/:id/delete", (req, res) => {
 	delete urlDatabase[req.params.id]
 	delete req.params.id 
-	res.redirect("http://localhost:8080/urls");
+	res.redirect("/urls");
 })
 
 
 app.post("/login", (req, res) => {
 	res.cookie('username', req.body.username);
-	res.redirect("http://localhost:8080/urls");
+	res.redirect("/urls");
 })
 
 app.post("/:id/logout", (req, res) => {
 	res.clearCookie('username', req.params.id);
-	res.redirect("http://localhost:8080/urls");
+	res.redirect("/urls");
 })
 
 
@@ -85,6 +98,42 @@ app.get("/u/:shortURL", (req, res) => {
     let longURL = urlDatabase[shorty];
         res.redirect(longURL);
 });
+
+app.get("/register", (req, res) => {
+	let templateVars = { 
+		username: req.cookies["username"], 
+		// id: users[id],
+		// email: users[email],
+		// password: users[password]
+	};
+	res.render("user_register", templateVars);
+});
+
+app.post("/register", (req, res, err) => {
+	var newId = generateRandomString();
+
+	if (!req.body.email || !req.body.password) {
+		res.status(400).send('400 Bad Request: missing email or password.');
+		throw '400 Bad Request: missing email or password.'
+	};
+
+	for (var user in users) {
+		if (users[user].email === req.body.email) {
+		res.status(400).send('400 Bad Request: email already exists.');
+		throw '400 Bad Request: email already exists.'
+		};	
+	};
+	
+		users[newId] = { 
+			id: newId, 
+			email: req.body.email, 
+			password: req.body.password
+		}
+	res.cookie('user_id', req.body.email);
+	// }
+	console.log(users);
+	res.redirect("/urls");
+})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
