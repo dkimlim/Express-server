@@ -71,7 +71,11 @@ app.post("/urls/:id/delete", (req, res) => {
 
 app.post("/login", (req, res) => {
 	res.cookie('username', req.body.username);
-	console.log(req.cookies);
+	res.redirect("http://localhost:8080/urls");
+})
+
+app.post("/:id/logout", (req, res) => {
+	res.clearCookie('username', req.params.id);
 	res.redirect("http://localhost:8080/urls");
 })
 
