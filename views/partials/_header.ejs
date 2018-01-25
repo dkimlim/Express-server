@@ -5,20 +5,20 @@
 		
 		<h1><center>TinyApp</center></h1>
 
+
 		<% if(username){ %>
-		   <h3><%= username %></h3> 
-		  <form method="POST" action="<%= username %>/logout">
+		   <h3>You are logged in!</h3> 
+		  <form method="POST" action="/logout">
 		   	<input type="submit" value="Logout">
 		  </form>
-
+		
 		<% } else { %>
 
-		   <form action="/login" method="POST">
-		      <label for="username">Sign in:</label>
-		      <input id="username" type="text" name="username" style="width: 70px">
-		      <input type="submit" value="Submit">
-		   </form>
+		<a href="http://localhost:8080/login">Login</a>
+		<a href="http://localhost:8080/register">Register a new account</a>
+
  		<% } %>
+
 
 
 	</body>

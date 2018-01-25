@@ -1,0 +1,27 @@
+{
+  "name": "express-server",
+  "version": "1.0.0",
+  "description": "tiny app project for lighthouse labs",
+  "main": "express-server.js",
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "body-parser": "^1.18.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node express-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dkimlim/TinyApp.git"
+  },
+  "author": "Diane KL",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dkimlim/TinyApp/issues"
+  },
+  "homepage": "https://github.com/dkimlim/TinyApp#readme"
+}

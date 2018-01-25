@@ -1,0 +1,21 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+	<head>
+	  <title>TinyApp</title>
+	</head>
+
+	<body style="font-size:20px; padding:50px;">
+
+	<header><% include ./partials/_header %></header>
+
+	<h3 style="margin: 50px 0 10px 0"> Sign in to your account</h3>
+
+ 	<form action="/login" method="POST">
+		<input type="email" name="email" placeholder="enter your e-mail" style="width: 150px">
+      <input type="password" name="password" placeholder="enter your password" style="width: 150px">
+		<input type="submit" value="Submit">
+ 	</form>
+
+	</body>
+</html>
