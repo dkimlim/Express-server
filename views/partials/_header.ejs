@@ -7,15 +7,15 @@
 
 
 		<% if(username){ %>
-		   <h3>You are logged in!</h3> 
+		   <h3><%= username.email %> is logged in!</h3> 
 		  <form method="POST" action="/logout">
 		   	<input type="submit" value="Logout">
 		  </form>
 		
 		<% } else { %>
 
-		<a href="http://localhost:8080/login">Login</a>
-		<a href="http://localhost:8080/register">Register a new account</a>
+		<a href="/login">Login</a>
+		<a href="/register">Register a new account</a>
 
  		<% } %>
 

@@ -10,11 +10,11 @@
 
 		<header><% include ./partials/_header %></header>
 
-	    <h3 style="margin: 50px 0 10px 0"> <%= shortURL %>for <%= longURL %></h3>
+	    <h3 style="margin: 50px 0 10px 0"> <%= urls.shortURL %> for <%= urls.longURL %></h3>
 
 	     <form method="POST">
 	      <label for="longURL">Edit your URL:</label>
-	      <input id="shortURL" type="text" name="longURL" placeholder= "<%= longURL %>"" style="width: 300px">
+	      <input id="shortURL" type="text" name="longURL" placeholder= "<%= urls.longURL %>"" style="width: 300px">
 	      <input type="submit" value="Update">
 	    </form>
 	    
