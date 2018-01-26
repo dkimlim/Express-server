@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 
-	<head>
-	  <title>TinyApp</title>
-	</head>
+<head>
+  <title>TinyApp</title>
+</head>
 
-	<body style="font-size:20px; padding:50px;">
+<body style="font-size:20px; padding:50px;">
 
-	<header><% include ./partials/_header %></header>
+<header><% include ./partials/_header %></header>
 
-		<h3> Your Short URLs</h3>
+	<h3> Your Short URLs</h3>
 
-	<% for (var key in urls) { %>
-		
+
+	 <% for (var key in urls) { %>
+	 <% if (urls[key].userID == username.id) { %>
+
 	    <ul>
 	    	<li> 
-	    		<a href ="localhost:8080/urls/<%= key %>"> http://localhost:8080/<%= key %></a> <%= " (" + urls[key] + ") "%> 
+	    		 <a href = "/urls/<%= key %>"><%= key %></a>
+	    		 <br> (<%= urls[key].longURL %>)
+
 				<form method="POST" action="/urls/<%= key %>/delete"><input type="submit" value="Don't press!"></form>
 			</li>	
 	    </ul>
 
+	    <% } %>
 	<% } %>
 
-	</body>
+</body>
 </html>

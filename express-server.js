@@ -1,9 +1,9 @@
 	// NOT WORKING:
-	// - register flow
-	// - header doesn't change to login when register is successful. Missing variables for a new urlDatabase
 	
-
-
+	
+	
+	
+	
 
 
 	const express = require("express");
@@ -17,19 +17,21 @@
 	app.use(cookieParser());
 	app.use(bodyParser.urlencoded({extended: true}));
 
-	const urlDatabase = {
-	"userRandomID": {
-		// "b2xVn2": "http://www.lighthouselabs.ca",
-		userID: "userRandomID",
-		longURL: "http://www.lighthouselabs.ca",
-		shortURL: "b2xVn2" 
-	},
-	"user2RandomID": {
-		// "9sm5xK": "http://www.google.com",
-		userID: "user2RandomID",
-		longURL: "http://www.google.com",
-		shortURL:  "9sm5xK"
-	}
+	var urlDatabase = {
+	  "b2xVn2": {
+	    longURL: "http://www.lighthouselabs.ca",
+	    userID: "userRandomID",
+	    // views: 0,
+	    // uniqueVisits: 0,
+	    // createdAt: new Date()
+	  },
+	  "9sm5xK": {
+	    longURL: "http://www.google.com",
+	    userID: "user2RandomID",
+	    // views: 0,
+	    // uniqueVisits: 0,
+	    // createdAt: new Date()
+	  }
 	};
 
 	const users = { 
@@ -54,56 +56,61 @@
 	res.json(urlDatabase);
 	});
 
+	//INDEX default page for all URLs
 	app.get("/urls", (req, res) => {
 	let idKey = req.cookies['user_id']
+	let tinyKey = req.cookies['tiny_url']
 	let templateVars = { 
 		username: users[idKey], 
-		urls: urlDatabase[idKey]
+		urls: urlDatabase
 	};
+
 	res.render("urls_index", templateVars);
 	});
 
-	//Template page to create a new tiny-url longURL that will be shortened
+	//Template page to create a NEW tiny-url longURL that will be shortened
 	app.get("/urls/new", (req, res) => {
 		if (!req.cookies['user_id']){
 			res.redirect("/login");
 		}
-		let templateVars = {
-			username: users[req.cookies['user_id']]
+		let idKey = req.cookies['user_id']
+		let tinyKey = req.cookies['tiny_url']
+		let templateVars = { 
+			username: users[idKey], 
+			urls: urlDatabase[tinyKey]
 		};
 		res.render("urls_new", templateVars);
 	});
 
-	//Return post when client enters a new long URL (and get a tiny url associated)
+	//NEW long URL (and get a tiny url associated) were just created via form
 	app.post("/urls", (req, res) => {	
 		var shorty = generateRandomString();
 		let idKey = req.cookies['user_id']
-		let urls = urlDatabase[idKey]
+		// let urls = urlDatabase[
 
-		if(req.cookies['user_id']) {
-			urls = { 
-			id: req.cookies['user_id'], 
-			shortURL: req.body.shortURL, 
-			longURL: req.body.longURL
-			}
+		urlDatabase[shorty] = { 
+		longURL: req.body.longURL,
+		userID: req.cookies['user_id']
 		}
+		// delete urls.longURL
+		// delete urls.shortURL
 
-		delete urls.longURL
-		delete urls.shortURL
+		urlDatabase[shorty].longURL = req.body.longURL;
 
-		urls.longURL = req.body.longURL;
-		urls.shortURL = shorty
-		console.log(idKey);
-		res.redirect(`/urls/${shorty}`); 
+		
+
+		res.cookie('tiny_url', urlDatabase['shorty']);
+		// urls.shortURL = shorty
+		res.redirect(/urls/); 
 	});
 
-
+	//EDIT default page.
 	app.get("/urls/:id", (req, res) => {
-		let idKey = req.cookies['user_id']
-		let shortURL = req.params.id
+		
+		let shorty = req.params.id
 		let templateVars = { 
-			username: users[idKey],  
-			urls: urlDatabase[idKey]
+			username: users[req.cookies['user_id']],  
+			urls: urlDatabase
 		};
 
 		if (!req.cookies['user_id']){
@@ -112,27 +119,34 @@
 		res.render("urls_show", templateVars);
 	});
 
+	//EDIT existing tiny-url with a new longURL
 	app.post("/urls/:id", (req, res) => {
 		let idKey = req.cookies['user_id']
-		let urls = urlDatabase[idKey]
-		let shortURL = req.params.id
+		let shorty = req.params.id
+		let urls = urlDatabase[shorty]
 		
 		urls.longURL = req.body.longURL;
 		res.redirect("/urls");
 	});
 
+	//Delete an existing tiny-url and associated longURL
 	app.post("/urls/:id/delete", (req, res) => {
 		let idKey = req.cookies['user_id']
-		let urls = urlDatabase[idKey]
-		let shortURL = req.params.id
+		let shorty = req.params.id
+		// let tinyKey = req.cookies['tiny_url']
 		
-		delete urls
+		delete urlDatabase[shorty]
+		// delete 
 		res.redirect("/urls");
 	});
 
+	//Default LOGIN page.
 	app.get("/login", (req, res) => {
+		let idKey = req.cookies['user_id'];
+		let tinyKey = req.cookies['tiny_url']
 		let templateVars = {
-			username: users[req.cookies['user_id']]
+			username: users[idKey],
+			urls: urlDatabase[tinyKey]
 		};
 	
 		res.render("user_login", templateVars);
@@ -165,37 +179,44 @@
 		res.redirect("/login");
 	});
 
-
+	//REDIRECT function from tiny-url to longURL
 	app.get("/u/:shortURL", (req, res) => {
-		let idKey = req.cookies['user_id']
-		let urls = urlDatabase[idKey]
+		// let idKey = req.cookies['user_id']
+		let urls = urlDatabase[req.params.shortURL]
 
 	    res.redirect(urls.longURL);
 	});
 
-	// Template page to register a new account.
+	// Default REGISTER page.
 	app.get("/register", (req, res) => {
+		let idKey = req.cookies['user_id']
 		let templateVars = {
-			username: users[req.cookies['user_id']]
+			username: users[idKey]
 		};
 		
 		res.render("user_register", templateVars);
 	});	
 	
 		
-	//Client entered email and password to register. Must verify 2 conditionals: 
+	//REGISTER an email and password. Must verify 2 conditionals: 
 	// - if an email already exists in our database. 
 	// - if password or email is missing. 
 	app.post("/register", (req, res, err) => {
-		let idKey = req.cookies['user_id']
-		let urls = urlDatabase[idKey]
+		// let idKey = req.cookies['user_id']
 		let newId = generateRandomString();
+		let tinyKey = req.cookies['tiny_url']
 
 		users[newId] = { 
 			id: newId, 
 			email: req.body.email, 
 			password: req.body.password
 		}
+
+		// urlDatabase[newId] = { 
+		// 	userID: newId,
+		// 	shortURL: 'example-url',
+			// longURL: 'http://www.example.com'
+		// }
 
 		res.cookie('user_id', users['newId']);
 
@@ -211,7 +232,7 @@
 			}
 		}
 
-		res.redirect("/urls/new")
+		res.redirect("/login")
 	});
 
 

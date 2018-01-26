@@ -4,10 +4,11 @@
   "description": "tiny app project for lighthouse labs",
   "main": "express-server.js",
   "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.7",
-    "express": "^4.16.2",
-    "body-parser": "^1.18.2"
+    "express": "^4.16.2"
   },
   "devDependencies": {},
   "scripts": {
