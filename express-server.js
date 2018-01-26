@@ -1,16 +1,12 @@
-	// NOT WORKING:
-	
-	
-	
-	
-	
-
 
 	const express = require("express");
 	const app = express();
 	const PORT = process.env.PORT || 8080; 
 	const bodyParser = require("body-parser");
 	const cookieParser = require("cookie-parser");
+	const bcrypt = require('bcrypt');
+	const password = "purple-monkey-dinosaur"; // you will probably this from req.params
+	const hashedPassword = bcrypt.hashSync(password, 10);
 
 
 	app.set("view engine", "ejs");
@@ -155,13 +151,15 @@
 	app.post("/login", (req, res, err) => {
 		let userFound = true;
 
+		// bcrypt.compareSync(req.body.password, hashedPassword)
+
 		if (!req.body.email || !req.body.password) {
 			res.status(400).send('400 Bad Request: missing email or password.')
 			throw '400 Bad Request: missing email or password.'
 		}
 
 		for (let user in users) {
-			if (req.body.email === users[user].email && req.body.password === users[user].password) {
+			if (req.body.email === users[user].email && bcrypt.compareSync(req.body.password, users[user].password)) {
 				res.cookie('user_id', users[user].id);
 				res.redirect("/urls");
 				return userFound = false;
@@ -209,8 +207,10 @@
 		users[newId] = { 
 			id: newId, 
 			email: req.body.email, 
-			password: req.body.password
+			password: bcrypt.hashSync(req.body.password, 10)
 		}
+	// const password = "purple-monkey-dinosaur"; 
+	// const hashedPassword = bcrypt.hashSync(password, 10);
 
 		// urlDatabase[newId] = { 
 		// 	userID: newId,
