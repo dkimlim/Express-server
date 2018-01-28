@@ -11,21 +11,28 @@
 
 	<h3> Your Short URLs</h3>
 
+	 <% if (!username) { %>
+
+	 <p>Login or register with the links above to view your Tiny URL database</p>
+
+    <% } else { %>
 
 	 <% for (var key in urls) { %>
-	 <% if (urls[key].userID == username.id) { %>
 
 	    <ul>
 	    	<li> 
 	    		 <a href = "/urls/<%= key %>"><%= key %></a>
 	    		 <br> (<%= urls[key].longURL %>)
 
-				<form method="POST" action="/urls/<%= key %>/delete"><input type="submit" value="Don't press!"></form>
+				<form method="GET" action="/urls/<%= key %>"><input type="submit" value="Edit your link"></form>
+				<form method="POST" action="/urls/<%= key %>/delete"><input type="submit" value="Delete your URL"></form>
 			</li>	
 	    </ul>
 
 	    <% } %>
 	<% } %>
+
+	<a href="/urls/new/"> Create new Tiny Url</a>
 
 </body>
 </html>
