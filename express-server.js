@@ -30,7 +30,6 @@ function generateRandomString() {
 };
 
 // find user object for associated URL
-// const userURLS = {};
 function urlsForUser(id) {
   let userURLs = {};
   for (let key in urlDatabase) {
@@ -41,12 +40,6 @@ function urlsForUser(id) {
   return userURLs;
 };
 
-// urlDatabase[shorty] = { 
-// 		longURL: req.body.longURL,
-// 		userID: req.session["user_id"]
-// 		}
-
-
 	app.get("/", (req, res) => {
 		if (users[req.session["user_id"]]) {
 	      res.redirect('/urls');
@@ -54,7 +47,6 @@ function urlsForUser(id) {
 	      res.redirect('/login');
 	    }
 	});
-
 
 	app.get("/urls.json", (req, res) => {
 	res.json(urlDatabase);
@@ -68,14 +60,11 @@ function urlsForUser(id) {
 			username: users[idKey], 
 			urls: uniqueURL
 		};
-		console.log("INDEX PAGE")
-		console.log(idKey)
-		console.log(uniqueURL)
-
+		
 		res.render("urls_index", templateVars);
 	});
 
-	//Template page to create a NEW tiny-url longURL that will be shortened
+	//Default page to create a NEW tiny-url.
 	app.get("/urls/new", (req, res) => {
 		let idKey = req.session["user_id"];
 		let uniqueURL = urlsForUser(idKey);
@@ -90,48 +79,42 @@ function urlsForUser(id) {
 		res.render("urls_new", templateVars);
 	});
 
-	//NEW long URL (and get a tiny url associated) were just created via form
+	//POST a NEW long URL (and get a tiny url associated) were just created via form
 	app.post("/urls", (req, res) => {	
 		let shorty = generateRandomString();
-		// let idKey = req.session["user_id"]
-		// let urls = urlDatabase[
 
 		urlDatabase[shorty] = { 
 		  longURL: req.body.longURL,
 		  userID: req.session["user_id"]
 		}
 
-		// console.log("NEW URL POST");
-		// console.log(users);
-		// console.log(urlDatabase);
-
-		// delete urls.longURL
-		// delete urls.shortURL
-
-		// urlDatabase[shorty].longURL = req.body.longURL;
-		// urls.shortURL = shorty
-		res.redirect(/urls/); 
+		res.redirect(`/urls/${shorty}`); 
 	});
 
-	//default page to EDIT a long URL.
+	//default page to EDIT a long URL. 3 conditionals:
+	// - (minor) if URL for the given ID does not exist (error message)
+	// - if user is not logged in (error message)
+	// - if user is logged in but does not own URL with the tiny ID (error message)
 	app.get("/urls/:id", (req, res) => {
-		
+		let idKey = req.session["user_id"]
 		let shorty = req.params.id;
 		let templateVars = { 
-			username: users[req.session["user_id"]],  
-			urls: urlDatabase
+			username: users[idKey],  
+			urls: urlDatabase,
+			shortURL: shorty
 		};
 
-		if (!req.session["user_id"]) {
-		  res.redirect("/login");
-		}
-
-		res.render("urls_show", templateVars);
+		if (!idKey) {
+		  res.send("Please login or register");
+		} else if (idKey !== urlDatabase[shorty].userID) {
+           res.send("This short URL is not valid.")
+        } else {
+        	res.render("urls_show", templateVars);
+        }
 	});
 
 	//EDIT long URL for an existing tiny-url.
 	app.post("/urls/:id", (req, res) => {
-		// let idKey = req.session["user_id"];
 		let shorty = req.params.id;
 		let urls = urlDatabase[shorty];
 		
@@ -141,7 +124,6 @@ function urlsForUser(id) {
 
 	//Delete an existing tiny-url and associated longURL
 	app.post("/urls/:id/delete", (req, res) => {
-		// let idKey = req.session["user_id"]
 		let shorty = req.params.id
 		
 		delete urlDatabase[shorty]
@@ -156,12 +138,6 @@ function urlsForUser(id) {
 		let templateVars = {
 			username: users[idKey]
 		};
-			
-		// console.log("LOGIN PAGE");
-		// console.log(users);
-		// console.log(urlDatabase);
-		// console.log(req.session["tiny_url"])
-		// console.log(idKey);
 	
 		res.render("user_login", templateVars);
 	});
@@ -197,15 +173,18 @@ function urlsForUser(id) {
 
 	//REDIRECT page from tiny-url to longURL
 	app.get("/u/:shortURL", (req, res) => {
-		// let idKey = req.cookies['user_id']
 		let urls = urlDatabase[req.params.shortURL]
+
+		if (!urls.longURL) {
+		  res.status(400).send('400 Bad Request: URL provided is incorrect.')
+		  throw '400 Bad Request: URL provided is incorrect.'
+		}
 
 	    res.redirect(urls.longURL);
 	});
 
 	// Default REGISTER page.
 	app.get("/register", (req, res) => {
-		// let idKey = req.session["user_id"]
 		let templateVars = {
 			username: users[req.session["user_id"]]
 		};
@@ -218,9 +197,6 @@ function urlsForUser(id) {
 	// - if password or email is missing. 
 	app.post("/register", (req, res, err) => {
 		let newId = generateRandomString();
-		
-		// console.log(users[newId]);
-		// console.log(users);
 
 		if (!req.body.email || !req.body.password) {
 			res.status(400).send('400 Bad Request: missing email or password.')
