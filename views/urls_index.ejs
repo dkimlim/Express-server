@@ -21,18 +21,19 @@
 
 	    <ul>
 	    	<li> 
-	    		 <a href = "/urls/<%= key %>"><%= key %></a>
-	    		 <br> (<%= urls[key].longURL %>)
-
+	    		<font size ="6" color="blue"><%= urls[key].longURL %></font>
+	    		<br><a href = "/urls/<%= key %>"><%= key %></a> 
 				<form method="GET" action="/urls/<%= key %>"><input type="submit" value="Edit your link"></form>
-				<form method="POST" action="/urls/<%= key %>/delete"><input type="submit" value="Delete your URL"></form>
+				 <form method="POST" action="/urls/<%= key %>/delete"><input type="submit" style="color:red" value="Delete your URL"></form>
+				
 			</li>	
 	    </ul>
 
 	    <% } %>
 	<% } %>
 
-	<a href="/urls/new/"> Create new Tiny Url</a>
+	 <p><h5><center><a href="/urls/new"> Create a new Tiny URL</a></center></h5></p>
+	
 
 </body>
 </html>

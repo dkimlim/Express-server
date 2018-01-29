@@ -10,18 +10,16 @@
 
 		<header><% include ./partials/_header %></header>
 
-		<% for (var key in urls) { %>
 
-		<% if (urls[key].userID == username.id) { %>
-
-		    <h3 style="margin: 50px 0 10px 0"> <%= key %> for <%= urls[key].longURL %></h3>
+		    <h3 style="margin: 50px 0 10px 0"> <%= shortURL %> for <%= urls[shortURL].longURL %></h3>
 
 		     <form method="POST">
 		      <label for="longURL">Edit your URL:</label>
-		      <input id="shortURL" type="text" name="longURL" placeholder= "<%= key.longURL %>"" style="width: 300px">
+		      <input id="shortURL" type="text" name="longURL" placeholder= "<%= urls[shortURL].longURL %>"" style="width: 300px">
 		      <input type="submit" value="Update">
 		    </form>
-	     <% } %>
-	    <% } %>
+	     
+
+	    <p><h5><center><a href="/urls"> View all your Tiny Urls</a></center></h5></p>
 	</body>
 </html>
