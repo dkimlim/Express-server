@@ -96,7 +96,7 @@ function urlsForUser(id) {
 	// - if user is not logged in (error message)
 	// - if user is logged in but does not own URL with the tiny ID (error message)
 	app.get("/urls/:id", (req, res) => {
-		let idKey = req.session["user_id"]
+		let idKey = req.session["user_id"];
 		let shorty = req.params.id;
 		let templateVars = { 
 			username: users[idKey],  
@@ -124,7 +124,7 @@ function urlsForUser(id) {
 
 	//Delete an existing tiny-url and associated longURL
 	app.post("/urls/:id/delete", (req, res) => {
-		let shorty = req.params.id
+		let shorty = req.params.id;
 		
 		delete urlDatabase[shorty]
 		
@@ -134,7 +134,6 @@ function urlsForUser(id) {
 	//Default LOGIN page.
 	app.get("/login", (req, res) => {
 		let idKey = req.session["user_id"];
-		
 		let templateVars = {
 			username: users[idKey]
 		};
@@ -173,7 +172,7 @@ function urlsForUser(id) {
 
 	//REDIRECT page from tiny-url to longURL
 	app.get("/u/:shortURL", (req, res) => {
-		let urls = urlDatabase[req.params.shortURL]
+		let urls = urlDatabase[req.params.shortURL];
 
 		if (!urls.longURL) {
 		  res.status(400).send('400 Bad Request: URL provided is incorrect.')
@@ -217,7 +216,7 @@ function urlsForUser(id) {
 		}
 
 		req.session.user_id = newId;
-		res.redirect("/urls/new")
+		res.redirect("/urls/new");
 	});
 
 
